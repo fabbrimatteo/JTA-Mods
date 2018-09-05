@@ -20,7 +20,7 @@ namespace fs = std::experimental::filesystem;
 int main()
 {	
 	char path[] = "C:\\Users\\chebo\\Documents\\JTA-Demo\\";
-	char scenarios_path[] = "C:\\Users\\chebo\\Documents\\JTA-Scenarios\\";
+	char scenarios_path[] = "C:\\Users\\chebo\\Documents\\JTA-Scenarios-Demo\\";
 
 	int max_samples = 30 * 60 * 1 + 1;
 	DatasetAnnotator* S;

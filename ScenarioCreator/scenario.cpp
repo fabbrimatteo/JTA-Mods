@@ -3,6 +3,10 @@
 
 #include "scenario.h"
 #include <filesystem>
+#include <iostream>
+#include <string>
+
+namespace fs = std::experimental::filesystem;
 
 using namespace std::tr2::sys;
 
@@ -11,7 +15,7 @@ char *logString = (char*)malloc(logLenght * sizeof(char));
 
 FILE *f;
 const char *filesPath = "C:\\Users\\chebo\\Documents\\JTA-Scenarios-Demo\\";
-char fileName[20] = "None";
+char fileName[20] = "log_1.txt";
 int nFiles = 0, currentFile = 1;
 
 std::string statusText;
@@ -56,6 +60,7 @@ int currentBehaviour = 0;
 bool group = false;
 const int nMaxPeds = 50;
 const int numberTaks = 9;
+
 
 LPCSTR tasks[numberTaks] = {
 	"SCENARIO",
@@ -289,15 +294,14 @@ void camLockChange()
 
 void saveFile()
 {
-	char fname[50] = "";
+	std::string fname = "";
 	int stop = 0;
 
 	if (stopCoords)
 		stop = 1;
 
-	strcat(fname, filesPath);
-	strcat(fname, fileName);
-	f = fopen(fname, "w");
+	fname = fname + std::string(filesPath) + std::string(fileName);
+	f = fopen(fname.c_str(), "w");
 
 	if (camMoving)
 		fprintf_s(f, "%d %f %f %f %d %f %f %f %f %f %f\n", (int)camMoving, A.x, A.y, A.z, stop, B.x, B.y, B.z, C.x, C.y, C.z);
@@ -310,7 +314,7 @@ void saveFile()
 	fprintf_s(f, "%s", logString);
 	fclose(f);
 
-	sprintf_s(fname, "\"%s\" SAVED", fileName);
+	fname = fname + "  SAVED!";
 	set_status_text(fname);
 }
 
@@ -328,35 +332,20 @@ int readLine(FILE *f, Vector3 *pos)
 	return result;
 }
 
-int file_exist(char *filename)
+bool file_exist(std::string fileName)
 {
-	if (std::tr2::sys::exists(std::tr2::sys::path(filename))) {
-		return 1;
-	}
-	else {
-		return 0;
-	}
-	/*
-	struct stat buffer;
-	return (stat(filename, &buffer) == 0);
-	*/
+	std::ifstream infile(fileName);
+	return infile.good();
 }
 
-void readDir() {
-	char fname[50] = "";
-	char tmpName[20];
+void readDirr() {
 	int i = 0;
-
+	std::string s;
 	do {
 		i++;
-
-		strcpy(fname, "");
-		sprintf_s(tmpName, "log_%d.txt", i);
-
-		strcat(fname, filesPath);
-		strcat(fname, tmpName);
-	} while (file_exist(fname));
-
+		s = std::string(filesPath) + "log_" + std::to_string(i) + ".txt";
+		
+	} while (file_exist(s));
 	nFiles = i - 1;
 }
 
@@ -400,6 +389,9 @@ void writeLogLine(float x, float y, float z)
 }
 
 ScenarioCreator::ScenarioCreator() {
+
+	//log_file.open("log.txt");
+
 	PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), TRUE);
 	PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), TRUE);
 	PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
@@ -1734,12 +1726,14 @@ void ScenarioCreator::loadFile()
 	set_status_text(fname);
 }
 
+
+
+
 void ScenarioCreator::file_menu()
 {
 	const float lineWidth = 250.0;
 	const int lineCount = 4;
 	menuActive = true;
-
 	std::string caption = "FILE MANAGER";
 
 	char lines[lineCount][50] = {
@@ -1748,7 +1742,6 @@ void ScenarioCreator::file_menu()
 		"SAVE NEW",
 		"CLEAR LOG DATA"
 	};
-
 	char loadedFile[40];
 	DWORD waitTime = 150;
 	while (true)
@@ -1758,14 +1751,15 @@ void ScenarioCreator::file_menu()
 
 		sprintf_s(loadedFile, "file:~y~ %s", fileName);
 
-		readDir();
+		readDirr();
+
 		if (nFiles == 0){
 			strcpy(fileName, "None");
 			sprintf_s(lines[0], "LOAD	~y~[ no files ]");
 		}
 		else
 			sprintf_s(lines[0], "LOAD	~y~[ log_%d.txt ]", currentFile);
-
+		
 		do
 		{
 			// draw menu
@@ -1785,14 +1779,15 @@ void ScenarioCreator::file_menu()
 
 		update();
 		// process buttons
+		
 		if (bEnter)
 		{
 			switch (activeLineIndexFile)
 			{
 			case 0:
 				if (nFiles > 0) {
-					sprintf_s(fileName, "log_%d.txt", currentFile);
-					loadFile();
+					set_status_text("Not implemented!");
+					//loadFile();
 				}
 				break;
 			case 1:
@@ -1810,7 +1805,6 @@ void ScenarioCreator::file_menu()
 			default:
 				break;
 			}
-
 			waitTime = 200;
 		}
 		if (bBack)
@@ -1860,6 +1854,7 @@ void ScenarioCreator::file_menu()
 		}
 		resetMenuCommands();
 	}
+
 }
 
 void ScenarioCreator::draw_text(char *text, float x, float y, float scale) {
