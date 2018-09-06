@@ -303,8 +303,9 @@ DatasetAnnotator::DatasetAnnotator(std::string _output_path, const char* _file_s
 	//this->n_peds = 20;
 
 	// seconds are proportional to number of peds
-	this->secondsBeforeSaveImages = max_waiting_time / 1000 + 10 + 10;
-
+	//this->secondsBeforeSaveImages = max_waiting_time / 1000 + 10 + 10;
+	//ECCV 2018
+	this->secondsBeforeSaveImages = 10;
 
 	lastRecordingTime = std::clock() + (clock_t)((float)(secondsBeforeSaveImages * CLOCKS_PER_SEC));
 
@@ -804,11 +805,15 @@ void DatasetAnnotator::loadScenario(const char* fname)
 	// teleport far away in order to load game scenarios
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, vTP1.x, vTP1.y, vTP1.z, 0, 0, 1);
 	lockCam(vTP1, vTP1_rot);
-	WAIT(10000);
+	//WAIT(10000);
+	//ECCV 2018
+	WAIT(3000);
 
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, vTP2.x, vTP2.y, vTP2.z, 0, 0, 1);
 	lockCam(vTP2, vTP2_rot);
-	WAIT(10000);
+	//WAIT(10000);
+	//ECCV 2018
+	WAIT(3000);
 
 	/*if (moving == 0)
 		Scenario::teleportPlayer(cCoords);
@@ -835,9 +840,17 @@ void DatasetAnnotator::loadScenario(const char* fname)
 		&goFrom, &goTo, &task_time, &type, &radius, &min_lenght, 
 		&time_between_walks, &spawning_radius) >= 0) {
 
-		spawn_peds_flow(pos, goFrom, goTo, npeds, ngroup, 
-			currentBehaviour, task_time, type, radius, 
-			min_lenght, time_between_walks, spawning_radius, speed);
+		if (currentBehaviour == 8) {
+			spawn_peds_flow(pos, goFrom, goTo, npeds, ngroup,
+				currentBehaviour, task_time, type, radius,
+				min_lenght, time_between_walks, spawning_radius, speed);
+		}
+		else {
+			spawn_peds(pos, goFrom, goTo, npeds, ngroup,
+				currentBehaviour, task_time, type, radius,
+				min_lenght, time_between_walks, spawning_radius, speed);
+		}
+			
 	}
 	fclose(f);
 
@@ -856,19 +869,22 @@ void DatasetAnnotator::spawn_peds_flow(Vector3 pos, Vector3 goFrom, Vector3 goTo
 	int i = 0;
 
 	float rnX, rnY;
-	int rn;
 
 	if (currentBehaviour == 8) {
 		for (int i = 0; i < npeds; i++) {
 			ped[i] = PED::CREATE_RANDOM_PED(goFrom.x, goFrom.y, goFrom.z);
 			WAIT(100);
 		}
-		WAIT(2000);
+		//WAIT(2000);
+		// ECCV 2018
+		WAIT(500);
 		for (int i = 0; i<npeds; i++) {
 			ENTITY::SET_ENTITY_HEALTH(ped[i], 0);
 			WAIT(50);
 		}
-		WAIT(2000);
+		//WAIT(2000);
+		// ECCV 2018
+		WAIT(500);
 		for (int i = 0; i < npeds; i++) {
 			AI::CLEAR_PED_TASKS_IMMEDIATELY(ped[i]);
 			PED::RESURRECT_PED(ped[i]);
@@ -878,17 +894,23 @@ void DatasetAnnotator::spawn_peds_flow(Vector3 pos, Vector3 goFrom, Vector3 goTo
 			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped[i], TRUE);
 			PED::SET_PED_COMBAT_ATTRIBUTES(ped[i], 1, FALSE);
 		}
-		WAIT(2000);
+		//WAIT(2000);
+		// ECCV 2018
+		WAIT(500);
 		for (int i = 0; i < npeds; i++) {
 			ped_specular[i] = PED::CREATE_RANDOM_PED(goTo.x, goTo.y, goTo.z);
 			WAIT(100);
 		}
-		WAIT(2000);
+		//WAIT(2000);
+		// ECCV 2018
+		WAIT(500);
 		for (int i = 0; i<npeds; i++) {
 			ENTITY::SET_ENTITY_HEALTH(ped_specular[i], 0);
 			WAIT(50);
 		}
-		WAIT(2000);
+		//WAIT(2000);
+		// ECCV 2018
+		WAIT(500);
 		for (int i = 0; i<npeds; i++) {
 			AI::CLEAR_PED_TASKS_IMMEDIATELY(ped_specular[i]);
 			PED::RESURRECT_PED(ped_specular[i]);
@@ -934,6 +956,107 @@ void DatasetAnnotator::spawn_peds_flow(Vector3 pos, Vector3 goFrom, Vector3 goTo
 			targetPed = ped[1];
 
 		Vector3 pp = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_ID(), TRUE);
+		
+		if (spawning_radius == -1) {
+			rnX = (float)(((rand() % 81) - 40) / 10.0);
+			rnY = (float)(((rand() % 81) - 40) / 10.0);
+		}
+		else {
+			rnX = (float)((rand() % (spawning_radius * 2)) - spawning_radius);
+			rnY = (float)((rand() % (spawning_radius * 2)) - spawning_radius);
+		}
+		float speed_rnd = (float)(10 + rand() % 4) / 10;
+		addwPed(ped[i], coordsToVector(goFrom.x + rnX, goFrom.y + rnY, goFrom.z), coordsToVector(goTo.x + rnX, goTo.y + rnY, goTo.z), time_between_walks, speed_rnd);
+		Object seq;
+		// waiting time proportional to distance
+		float atob = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(goFrom.x, goFrom.y, goFrom.z, goTo.x, goTo.y, goTo.z, 1);
+		int max_time = (int)((atob / 2.5) * 1000);
+
+		if (max_time > max_waiting_time)
+			max_waiting_time = max_time;
+
+		AI::OPEN_SEQUENCE_TASK(&seq);
+		AI::TASK_USE_MOBILE_PHONE_TIMED(0, rand() % max_time);
+		AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+		AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+		AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+		AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+		AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+		AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+		AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+		AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+		AI::CLOSE_SEQUENCE_TASK(seq);
+		AI::TASK_PERFORM_SEQUENCE(ped[i], seq);
+		AI::CLEAR_SEQUENCE_TASK(&seq);
+
+		if (spawning_radius != -1) {
+			rnX = (float)((rand() % (spawning_radius * 2)) - spawning_radius);
+			rnY = (float)((rand() % (spawning_radius * 2)) - spawning_radius);
+			speed_rnd = (float)(10 + rand() % 4) / 10;
+
+			WAIT(50);
+
+			addwPed(ped_specular[i], coordsToVector(goTo.x + rnX, goTo.y + rnY, goTo.z), coordsToVector(goFrom.x + rnX, goFrom.y + rnY, goFrom.z), time_between_walks, speed_rnd);
+
+			Object seq2;
+			AI::OPEN_SEQUENCE_TASK(&seq2);
+			AI::TASK_USE_MOBILE_PHONE_TIMED(0, rand() % max_time);
+			AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+			AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+			AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+			AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+			AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+			AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+			AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+			AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
+			AI::CLOSE_SEQUENCE_TASK(seq2);
+			AI::TASK_PERFORM_SEQUENCE(ped_specular[i], seq2);
+			AI::CLEAR_SEQUENCE_TASK(&seq2);
+		}
+	}
+}
+
+void DatasetAnnotator::spawn_peds(Vector3 pos, Vector3 goFrom, Vector3 goTo, int npeds, int ngroup, int currentBehaviour,
+	int task_time, int type, int radius, int min_lenght, int time_between_walks, int spawning_radius, float speed) {
+
+	Ped ped[100];
+	Vector3 current;
+	int i = 0;
+
+	int rn;
+
+	for (int i = 0; i < npeds; i++) {
+		ped[i] = PED::CREATE_RANDOM_PED(pos.x, pos.y, pos.z);
+		WAIT(50);
+	}
+	for (int i = 0; i < npeds; i++) {
+		ENTITY::SET_ENTITY_HEALTH(ped[i], 0);
+		WAIT(50);
+	}
+	WAIT(500);
+	for (int i = 0; i < npeds; i++) {
+		AI::CLEAR_PED_TASKS_IMMEDIATELY(ped[i]);
+		PED::RESURRECT_PED(ped[i]);
+		PED::REVIVE_INJURED_PED(ped[i]);
+		ENTITY::SET_ENTITY_COLLISION(ped[i], TRUE, TRUE);
+		PED::SET_PED_CAN_RAGDOLL(ped[i], TRUE);
+		PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped[i], TRUE);
+		PED::SET_PED_COMBAT_ATTRIBUTES(ped[i], 1, FALSE);
+	}
+	
+
+	// resurrecting all pedestrians and assigning them a task
+	for (int i = 0; i < npeds; i++) {
+
+		WAIT(50);
+
+		current = ENTITY::GET_ENTITY_COORDS(ped[i], TRUE);
+
+		Ped targetPed = ped[0];
+		if (npeds > 1)
+			targetPed = ped[1];
+
+		Vector3 pp = ENTITY::GET_ENTITY_COORDS(PLAYER::PLAYER_ID(), TRUE);
 		switch (currentBehaviour)
 		{
 		case 0:
@@ -968,71 +1091,13 @@ void DatasetAnnotator::spawn_peds_flow(Vector3 pos, Vector3 goFrom, Vector3 goTo
 				AI::TASK_CHAT_TO_PED(ped[i], targetPed, 16, 0.0, 0.0, 0.0, 0.0, 0.0);
 			break;
 		case 6:
-			if (i>0)
+			if (i > 0)
 				AI::TASK_COMBAT_PED(ped[i], ped[0], 0, 16);
 			break;
 		case 7:
 			AI::TASK_STAY_IN_COVER(ped[i]);
 			break;
-		case 8: {
-					if (spawning_radius == -1) {
-						rnX = (float)(((rand() % 81) - 40) / 10.0);
-						rnY = (float)(((rand() % 81) - 40) / 10.0);
-					}
-					else {
-						rnX = (float)((rand() % (spawning_radius * 2)) - spawning_radius);
-						rnY = (float)((rand() % (spawning_radius * 2)) - spawning_radius);
-					}
-					float speed_rnd = (float)(10 + rand() % 4) / 10;
-					addwPed(ped[i], coordsToVector(goFrom.x + rnX, goFrom.y + rnY, goFrom.z), coordsToVector(goTo.x + rnX, goTo.y + rnY, goTo.z), time_between_walks, speed_rnd);
-					Object seq;
-					// waiting time proportional to distance
-					float atob = GAMEPLAY::GET_DISTANCE_BETWEEN_COORDS(goFrom.x, goFrom.y, goFrom.z, goTo.x, goTo.y, goTo.z, 1);
-					int max_time = (int)((atob / 2.5) * 1000);
 
-					if (max_time > max_waiting_time)
-						max_waiting_time = max_time;
-
-					AI::OPEN_SEQUENCE_TASK(&seq);
-					AI::TASK_USE_MOBILE_PHONE_TIMED(0, rand() % max_time);
-					AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-					AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-					AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-					AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-					AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-					AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-					AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-					AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-					AI::CLOSE_SEQUENCE_TASK(seq);
-					AI::TASK_PERFORM_SEQUENCE(ped[i], seq);
-					AI::CLEAR_SEQUENCE_TASK(&seq);
-
-					if (spawning_radius != -1) {
-						rnX = (float)((rand() % (spawning_radius * 2)) - spawning_radius);
-						rnY = (float)((rand() % (spawning_radius * 2)) - spawning_radius);
-						speed_rnd = (float)(10 + rand() % 4) / 10;
-
-						WAIT(50);
-						
-						addwPed(ped_specular[i], coordsToVector(goTo.x + rnX, goTo.y + rnY, goTo.z), coordsToVector(goFrom.x + rnX, goFrom.y + rnY, goFrom.z), time_between_walks, speed_rnd);
-
-						Object seq2;
-						AI::OPEN_SEQUENCE_TASK(&seq2);
-						AI::TASK_USE_MOBILE_PHONE_TIMED(0, rand() % max_time);
-						AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-						AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-						AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-						AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-						AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-						AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-						AI::TASK_GO_TO_COORD_ANY_MEANS(0, goTo.x + rnX, goTo.y + rnY, goTo.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-						AI::TASK_GO_TO_COORD_ANY_MEANS(0, goFrom.x + rnX, goFrom.y + rnY, goFrom.z, speed_rnd, 0, 0, 786603, 0xbf800000);
-						AI::CLOSE_SEQUENCE_TASK(seq2);
-						AI::TASK_PERFORM_SEQUENCE(ped_specular[i], seq2);
-						AI::CLEAR_SEQUENCE_TASK(&seq2);
-					}
-		}
-			break;
 		default:
 			break;
 		}

@@ -96,10 +96,13 @@ private:
 	void addwPed(Ped p, Vector3 from, Vector3 to, int stop, float spd);
 	void spawn_peds_flow(Vector3 pos, Vector3 goFrom, Vector3 goTo, int npeds, int ngroup, int currentBehaviour, int task_time, int type, int radius, 
 		int min_lenght, int time_between_walks, int spawning_radius, float speed);
+	void spawn_peds(Vector3 pos, Vector3 goFrom, Vector3 goTo, int npeds, int ngroup, int currentBehaviour,
+		int task_time, int type, int radius, int min_lenght, int time_between_walks, int spawning_radius, float speed);
 	void loadScenario(const char* fname);
 	void walking_peds();
 	int myreadLine(FILE *f, Vector3 *pos, int *nPeds, int *ngroup, int *currentBehaviour, float *speed, Vector3 *goFrom, Vector3 *goTo, int *task_time,
 		int *type, int *radius, int *min_lenght, int *time_between_walks, int *spawning_radius);
+	
 	void addwPed_scenario(Ped p);
 	Cam lockCam(Vector3 pos, Vector3 rot);
 };

@@ -14,8 +14,8 @@ int logLenght = 100;
 char *logString = (char*)malloc(logLenght * sizeof(char));
 
 FILE *f;
-const char *filesPath = "C:\\Users\\chebo\\Documents\\JTA-Scenarios-Demo\\";
-char fileName[20] = "log_1.txt";
+const char *filesPath = "H:\\JTA-Scenarios-Demo\\";
+char fileName[20] = "None";
 int nFiles = 0, currentFile = 1;
 
 std::string statusText;
@@ -88,8 +88,8 @@ struct {
 	{ "Task Time", 1000000 },
 	{ "Type", 0 },
 	{ "Radius", 20 },
-	{ "Minimal Lenght", 4 },
-	{ "Time between Walks", 0 },
+	{ "Minimal Lenght", 1 },
+	{ "Time between Walks", 1 },
 	{ "Spawning Radius", 1 }
 };
 
@@ -389,9 +389,6 @@ void writeLogLine(float x, float y, float z)
 }
 
 ScenarioCreator::ScenarioCreator() {
-
-	//log_file.open("log.txt");
-
 	PLAYER::SET_EVERYONE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), TRUE);
 	PLAYER::SET_POLICE_IGNORE_PLAYER(PLAYER::PLAYER_PED_ID(), TRUE);
 	PLAYER::CLEAR_PLAYER_WANTED_LEVEL(PLAYER::PLAYER_PED_ID());
@@ -401,6 +398,8 @@ ScenarioCreator::ScenarioCreator() {
 	ENTITY::SET_ENTITY_CAN_BE_DAMAGED(PLAYER::PLAYER_PED_ID(), FALSE);
 
 	GAMEPLAY::SET_TIME_SCALE(1.0);
+
+	//log_file.open("log.txt");
 }
 
 ScenarioCreator::~ScenarioCreator() {
@@ -1555,6 +1554,7 @@ void ScenarioCreator::spawn_peds(Vector3 pos, int num_ped) {
 			break;
 		case 4:
 			AI::TASK_WANDER_IN_AREA(ped[i], current.x, current.y, current.z, (float)paramsLines[2].param, (float)paramsLines[3].param, (float)paramsLines[4].param);
+			//AI::TASK_WANDER_IN_AREA(ped[i], current.x, current.y, current.z, 20.0f, 1.0f, 1.0f);
 			break;
 		case 5:
 			if (i > 0)

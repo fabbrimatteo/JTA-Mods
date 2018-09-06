@@ -11,18 +11,22 @@
 #include "files.h"
 #include <list>
 #include <experimental/filesystem>
+#include "keyboard.h"
 
 DWORD	vehUpdateTime;
 DWORD	pedUpdateTime;
 using namespace std;
 namespace fs = std::experimental::filesystem;
 
-int main()
-{	
-	char path[] = "C:\\Users\\chebo\\Documents\\JTA-Demo\\";
-	char scenarios_path[] = "C:\\Users\\chebo\\Documents\\JTA-Scenarios-Demo\\";
+
+void record() {
+	char path[] = "H:\\JTA-Demo\\";
+	char scenarios_path[] = "H:\\JTA-Scenarios-Demo\\";
 
 	int max_samples = 30 * 60 * 1 + 1;
+	
+	// ECCV 2018
+	max_samples = 10 * 30;
 	DatasetAnnotator* S;
 
 	int seq_number = 0;
@@ -59,6 +63,21 @@ int main()
 			delete static_cast <DatasetAnnotator *>(S);
 			seq_number++;
 		}
+	}
+
+}
+
+
+void main()
+{	
+	std::ofstream strm("logme.txt");
+	while (true) {
+		if (IsKeyJustUp(VK_F8)) {
+			strm << "gg\n";
+			record();
+		}
+		WAIT(0);
+
 	}
 }
 
