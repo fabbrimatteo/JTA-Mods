@@ -24,7 +24,7 @@ This repository contains two Grand Theft Auto V Mods used for creating the [JTA 
 	- include the library to the projects by going to Configuration Properties->Linker->General  and set the path that points to the "lib" folder of the SDK in "Additional Library Directories" 
 - Also go to:  `Configuration Properties -> Linker -> Input`  and set the `ScriptHookV.lib` file name in `Additional Dependencies`
 - Go in `Build-Events -> Post-Build-Event` and, under `Command Line` type `xcopy /Y path/to/asi/file path/to/gta/installation/directory`
-- Under `Configuration-Properties -> General` change the Target Extension to `.asi` and Configuration Type to `.dll`
+- Under `Configuration-Properties -> General` change the `Target Extension` to `.asi` and `Configuration Type` to `.dll`
 - Build the entire solution.
 - Run Grand Theft Auto V and select Story Mode. If it is your first start of the game, you have to complete the first mission. Enjoy!
 - The mods will automatically start. Now, by pressing F5 you can use the ScenarioCreator mod to create your own scenarios. By pressing F8 the DatasetAnnotator mod will start recording the scenarios. You can disable the Mods in any time by pressing ctrl+R.
@@ -32,10 +32,13 @@ This repository contains two Grand Theft Auto V Mods used for creating the [JTA 
 
 
 ## ScenarioCreator usage
-By pressing F5 the mod will prompt the menu that can be easily browsed using the numpad. The peds submenu let you spawn new pedestrian with different behaviors. In the camera submenu, you can handle the camera position. The only important thing is the moving option. By enabling it you can define a path A B C that the camera must follow. The teleport 1 and teleport 2 locations must be placed near the scenario; this gives time to the game engine to spawn regular pedestrians.
-After the scenario is complete, move the player to a specific location (for non-moving sequences, the current camera position will be the camera position of your scenario). By pressing save new in the file submenu you will save the configuration file.
-For a new sequence, you have to clear the log data by pressing the relative button.
-
+- By pressing F5 the mod will prompt the menu that can be easily browsed using the numpad. 
+- The peds submenu let you spawn new pedestrian with different behaviors.
+- In the camera submenu, you can handle the camera position. 
+	- The only important thing is the moving option. By enabling it you can define a path A B C that the camera must follow.
+	- The teleport 1 and teleport 2 locations must be placed near the scenario; this gives time to the game engine to spawn regular pedestrians.
+- After the scenario is complete, move the player to a specific location (for non-moving sequences, the current camera position will be the camera position of your scenario). By pressing save new in the file submenu you will save the configuration file.
+- For a new sequence, you have to clear the log data by pressing the relative button.
 
 ## DatasetAnnotator usage
 By pressing F8 the mod will automatically load each scenario previously created and starts to record the dataset. You can stop the mod at any time by pressing ctrl+R. The data will be stored in a subdirectory of the GTA V game folder named `JTA`. For each sequence a new folder will be created, containing each recorded frames and a .csv annotation file.
