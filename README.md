@@ -7,8 +7,8 @@ This repository contains two Grand Theft Auto V Mods used for creating the [JTA 
 - Download and install a legal copy of Grand Theft Auto V
 - Download ScriptHook V AND the SDK [here](http://www.dev-c.com/gtav/scripthookv/). 
     - Follow the instructions reported on the web page. Also, follow the instructions of the SDK readme under the section "Runtime asi script reloading"
-- Download the ScenarioCreator Mod [here](https://drive.google.com/file/d/1ngV49QzDRmVL0KvewW_Fs0vklJNIM2K6/view?usp=sharing)
-- Download the DatasetAnnotator Mod [here](https://drive.google.com/file/d/1kY6VxOHfSVc6vSC08FR5l4acv_PEo_i_/view?usp=sharing)
+- Download the ScenarioCreator Mod: [`ScenarioCreator.asi`](https://drive.google.com/file/d/1ngV49QzDRmVL0KvewW_Fs0vklJNIM2K6/view?usp=sharing)
+- Download the DatasetAnnotator Mod: [`DatasetAnnotator.asi`](https://drive.google.com/file/d/1kY6VxOHfSVc6vSC08FR5l4acv_PEo_i_/view?usp=sharing)
 - Copy both files `ScenarioCreator.asi` and `DatasetAnnotator.asi` in the Grand Theft Auto V game folder.
 - Run Grand Theft Auto V and select Story Mode. If it is your first start of the game, you have to complete the first mission. Enjoy!
 - The mods will automatically start. Now, by pressing F5 you can use the ScenarioCreator mod to create your own scenarios. By pressing F8 the DatasetAnnotator mod will start recording the scenarios. You can disable the Mods in any time by pressing ctrl+R.
@@ -22,9 +22,9 @@ This repository contains two Grand Theft Auto V Mods used for creating the [JTA 
 - Open the Solution with Visual Studio (we used VS2017, but previous versions should work too) and, for each sub-project, follow these instructions:
 	- include the header files to the project by going in Configuration Properties->C/C++->General and set the path to the "inc" directory of the SDK in "Additional Include Directories"
 	- include the library to the projects by going to Configuration Properties->Linker->General  and set the path that points to the "lib" folder of the SDK in "Additional Library Directories" 
-- Also go to:  Configuration Properties->Linker->Input  and set the ScriptHookV.lib file name in "Additional Dependencies"
-- Go in Build-Events->Post-Build-Event and, under "Command Line" type "xcopy /Y path/to/asi/file path/to/gta/installation/directory"
-- Under Configuration-Properties->General change the Target Extension to ".asi" and Configuration Type to ".dll"
+- Also go to:  `Configuration Properties -> Linker -> Input`  and set the `ScriptHookV.lib` file name in `Additional Dependencies`
+- Go in `Build-Events -> Post-Build-Event` and, under `Command Line` type `xcopy /Y path/to/asi/file path/to/gta/installation/directory`
+- Under `Configuration-Properties -> General` change the Target Extension to `.asi` and Configuration Type to `.dll`
 - Build the entire solution.
 - Run Grand Theft Auto V and select Story Mode. If it is your first start of the game, you have to complete the first mission. Enjoy!
 - The mods will automatically start. Now, by pressing F5 you can use the ScenarioCreator mod to create your own scenarios. By pressing F8 the DatasetAnnotator mod will start recording the scenarios. You can disable the Mods in any time by pressing ctrl+R.
@@ -38,7 +38,7 @@ For a new sequence, you have to clear the log data by pressing the relative butt
 
 
 ## DatasetAnnotator usage
-By pressing F8 the mod will automatically load each scenario previously created and starts to record the dataset. You can stop the mod at any time by pressing ctrl+R. The data will be stored in a subdirectory of the GTA V game folder named 'JTA'. For each sequence a new folder will be created, containing each recorded frames and a .csv annotation file.
+By pressing F8 the mod will automatically load each scenario previously created and starts to record the dataset. You can stop the mod at any time by pressing ctrl+R. The data will be stored in a subdirectory of the GTA V game folder named `JTA`. For each sequence a new folder will be created, containing each recorded frames and a .csv annotation file.
 
 * _Note_ #1: each scenario will be recorded two times: one during the day and one during the night.
 
