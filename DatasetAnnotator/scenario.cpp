@@ -19,6 +19,7 @@
 #define DISPLAY_FLAG FALSE
 #define WANDERING_RADIUS 10.0
 #define MAX_PED_TO_CAM_DISTANCE 100.0
+#define DEMO FALSE
 
 static char scenarioTypes[14][40]{
 	"NEAREST",
@@ -303,9 +304,10 @@ DatasetAnnotator::DatasetAnnotator(std::string _output_path, const char* _file_s
 	//this->n_peds = 20;
 
 	// seconds are proportional to number of peds
-	//this->secondsBeforeSaveImages = max_waiting_time / 1000 + 10 + 10;
-	//ECCV 2018
-	this->secondsBeforeSaveImages = 10;
+	if (DEMO) 
+		this->secondsBeforeSaveImages = 10;
+	else
+		this->secondsBeforeSaveImages = max_waiting_time / 1000 + 10 + 10;
 
 	lastRecordingTime = std::clock() + (clock_t)((float)(secondsBeforeSaveImages * CLOCKS_PER_SEC));
 
@@ -805,15 +807,17 @@ void DatasetAnnotator::loadScenario(const char* fname)
 	// teleport far away in order to load game scenarios
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, vTP1.x, vTP1.y, vTP1.z, 0, 0, 1);
 	lockCam(vTP1, vTP1_rot);
-	//WAIT(10000);
-	//ECCV 2018
-	WAIT(3000);
+	if (DEMO)
+		WAIT(3000);
+	else
+		WAIT(10000);
 
 	ENTITY::SET_ENTITY_COORDS_NO_OFFSET(e, vTP2.x, vTP2.y, vTP2.z, 0, 0, 1);
 	lockCam(vTP2, vTP2_rot);
-	//WAIT(10000);
-	//ECCV 2018
-	WAIT(3000);
+	if (DEMO)
+		WAIT(3000);
+	else
+		WAIT(10000);
 
 	/*if (moving == 0)
 		Scenario::teleportPlayer(cCoords);
@@ -875,16 +879,18 @@ void DatasetAnnotator::spawn_peds_flow(Vector3 pos, Vector3 goFrom, Vector3 goTo
 			ped[i] = PED::CREATE_RANDOM_PED(goFrom.x, goFrom.y, goFrom.z);
 			WAIT(100);
 		}
-		//WAIT(2000);
-		// ECCV 2018
-		WAIT(500);
+		if (DEMO)
+			WAIT(500);
+		else
+			WAIT(2000);
 		for (int i = 0; i<npeds; i++) {
 			ENTITY::SET_ENTITY_HEALTH(ped[i], 0);
 			WAIT(50);
 		}
-		//WAIT(2000);
-		// ECCV 2018
-		WAIT(500);
+		if (DEMO)
+			WAIT(500);
+		else
+			WAIT(2000);
 		for (int i = 0; i < npeds; i++) {
 			AI::CLEAR_PED_TASKS_IMMEDIATELY(ped[i]);
 			PED::RESURRECT_PED(ped[i]);
@@ -894,23 +900,26 @@ void DatasetAnnotator::spawn_peds_flow(Vector3 pos, Vector3 goFrom, Vector3 goTo
 			PED::SET_BLOCKING_OF_NON_TEMPORARY_EVENTS(ped[i], TRUE);
 			PED::SET_PED_COMBAT_ATTRIBUTES(ped[i], 1, FALSE);
 		}
-		//WAIT(2000);
-		// ECCV 2018
-		WAIT(500);
+		if (DEMO)
+			WAIT(500);
+		else
+			WAIT(2000);
 		for (int i = 0; i < npeds; i++) {
 			ped_specular[i] = PED::CREATE_RANDOM_PED(goTo.x, goTo.y, goTo.z);
 			WAIT(100);
 		}
-		//WAIT(2000);
-		// ECCV 2018
-		WAIT(500);
+		if (DEMO)
+			WAIT(500);
+		else
+			WAIT(2000);
 		for (int i = 0; i<npeds; i++) {
 			ENTITY::SET_ENTITY_HEALTH(ped_specular[i], 0);
 			WAIT(50);
 		}
-		//WAIT(2000);
-		// ECCV 2018
-		WAIT(500);
+		if (DEMO)
+			WAIT(500);
+		else
+			WAIT(2000);
 		for (int i = 0; i<npeds; i++) {
 			AI::CLEAR_PED_TASKS_IMMEDIATELY(ped_specular[i]);
 			PED::RESURRECT_PED(ped_specular[i]);

@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <direct.h>
 
 namespace fs = std::experimental::filesystem;
 
@@ -14,7 +15,7 @@ int logLenght = 100;
 char *logString = (char*)malloc(logLenght * sizeof(char));
 
 FILE *f;
-const char *filesPath = "H:\\JTA-Scenarios-Demo\\";
+const char *filesPath = "JTA-Scenarios\\";
 char fileName[20] = "None";
 int nFiles = 0, currentFile = 1;
 
@@ -185,6 +186,7 @@ void firstOpen()
 	goTo.x += 2; goTo.y += 2;
 	srand((unsigned int)time(NULL));
 	strcpy(logString, "");
+	_mkdir(filesPath);
 	firstTime = false;
 }
 

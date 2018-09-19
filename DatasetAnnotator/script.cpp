@@ -20,13 +20,12 @@ namespace fs = std::experimental::filesystem;
 
 
 void record() {
-	char path[] = "H:\\JTA-Demo\\";
-	char scenarios_path[] = "H:\\JTA-Scenarios-Demo\\";
+	char path[] = "JTA\\";
+	char scenarios_path[] = "JTA-Scenarios\\";
+
+	_mkdir(path);
 
 	int max_samples = 30 * 60 * 1 + 1;
-	
-	// ECCV 2018
-	max_samples = 10 * 30;
 	DatasetAnnotator* S;
 
 	int seq_number = 0;
@@ -35,7 +34,7 @@ void record() {
 	for (auto &p : fs::recursive_directory_iterator(scenarios_path)) {
 		if (fs::is_regular_file(p)) {
 			int nsamples = 0;
-			std::string output_path = std::string(path) + std::string("\\seq_") + std::to_string(seq_number);
+			std::string output_path = std::string(path) + std::string("seq_") + std::to_string(seq_number);
 			_mkdir(output_path.c_str());
 			S = new DatasetAnnotator(output_path, p.path().string().c_str(), max_samples, 0);
 			Sleep(10);
