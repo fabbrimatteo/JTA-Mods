@@ -22,9 +22,9 @@ This repository contains two Grand Theft Auto V Mods used for creating the [JTA 
 - Open the Solution with Visual Studio (we used VS2017, but previous versions should work too) and, for each sub-project, follow these instructions:
 	- include the header files to the project by going in Configuration Properties->C/C++->General and set the path to the "inc" directory of the SDK in "Additional Include Directories"
 	- include the library to the projects by going to Configuration Properties->Linker->General  and set the path that points to the "lib" folder of the SDK in "Additional Library Directories" 
-- Also go to:  `Configuration Properties -> Linker -> Input`  and set the `ScriptHookV.lib` file name in `Additional Dependencies`
-- Go in `Build-Events -> Post-Build-Event` and, under `Command Line` type `xcopy /Y path/to/asi/file path/to/gta/installation/directory`
-- Under `Configuration-Properties -> General` change the `Target Extension` to `.asi` and `Configuration Type` to `.dll`
+	- Also go to:  `Configuration Properties -> Linker -> Input`  and set the `ScriptHookV.lib` file name in `Additional Dependencies`
+	- Go in `Build-Events -> Post-Build-Event` and, under `Command Line` type `xcopy /Y path/to/asi/file path/to/gta/installation/directory`
+	- Under `Configuration-Properties -> General` change the `Target Extension` to `.asi` and `Configuration Type` to `.dll`
 - Build the entire solution.
 - Run Grand Theft Auto V and select Story Mode. If it is your first start of the game, you have to complete the first mission. Enjoy!
 - The mods will automatically start. Now, by pressing F5 you can use the ScenarioCreator mod to create your own scenarios. By pressing F8 the DatasetAnnotator mod will start recording the scenarios. You can disable the Mods in any time by pressing ctrl+R.
