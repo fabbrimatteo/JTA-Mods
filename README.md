@@ -10,6 +10,7 @@ This repository contains two Grand Theft Auto V Mods used for creating the [JTA 
 - Download the ScenarioCreator Mod: [`ScenarioCreator.asi`](https://drive.google.com/file/d/1ngV49QzDRmVL0KvewW_Fs0vklJNIM2K6/view?usp=sharing)
 - Download the DatasetAnnotator Mod: [`DatasetAnnotator.asi`](https://drive.google.com/file/d/1kY6VxOHfSVc6vSC08FR5l4acv_PEo_i_/view?usp=sharing)
 - Copy both files `ScenarioCreator.asi` and `DatasetAnnotator.asi` in the Grand Theft Auto V game folder.
+- If you installed GTA V using Rockstar's Social Club, you have to change the permissions of the game folder (read, write and execute). If you used Steam, everything should be fine.
 - Run Grand Theft Auto V and select Story Mode. If it is your first start of the game, you have to complete the first mission. Enjoy!
 - The mods will automatically start. Now, by pressing F5 you can use the ScenarioCreator mod to create your own scenarios. By pressing F8 the DatasetAnnotator mod will start recording the scenarios. You can disable the Mods in any time by pressing ctrl+R.
 - Remember to disable the HUD in the display settings of GTA V. Also disable the in-game notifications.
@@ -26,6 +27,7 @@ This repository contains two Grand Theft Auto V Mods used for creating the [JTA 
 	- Go in `Build-Events -> Post-Build-Event` and, under `Command Line` type `xcopy /Y path/to/asi/file path/to/gta/installation/directory`
 	- Under `Configuration-Properties -> General` change the `Target Extension` to `.asi` and `Configuration Type` to `.dll`
 - Build the entire solution.
+- If you installed GTA V using Rockstar's Social Club, you have to change the permissions of the game folder (read, write and execute). If you used Steam, everything should be fine.
 - Run Grand Theft Auto V and select Story Mode. If it is your first start of the game, you have to complete the first mission. Enjoy!
 - The mods will automatically start. Now, by pressing F5 you can use the ScenarioCreator mod to create your own scenarios. By pressing F8 the DatasetAnnotator mod will start recording the scenarios. You can disable the Mods in any time by pressing ctrl+R.
 - Remember to disable the HUD in the display settings of GTA V. Also disable the in-game notifications.
