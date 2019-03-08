@@ -176,7 +176,7 @@ DatasetAnnotator::DatasetAnnotator(std::string _output_path, const char* _file_s
 	// inizialize the coords_file used to storage coords data
 	log_file.open(output_path + "\\log.txt");
 	coords_file.open(output_path + "\\coords.csv");
-	coords_file << "frame,pedestrian_id,joint_type,3D_x,3D_y,3D_z,2D_x,2D_y,occluded,self_occluded,";
+	coords_file << "frame,pedestrian_id,joint_type,2D_x,2D_y,3D_x,3D_y,3D_z,occluded,self_occluded,";
 	coords_file << "cam_3D_x,cam_3D_y,cam_3D_z,cam_rot_x,cam_rot_y,cam_rot_z,fov\n";
 
 	this->player = PLAYER::PLAYER_ID();
@@ -540,11 +540,11 @@ int DatasetAnnotator::update()
 				coords_file << nsample;					  // frame number
 				coords_file << "," << peds[i];			  // pedestrian ID
 				coords_file << "," << n+1;				  // joint type
+				coords_file << "," << x;				  // camera 2D x [px]
+				coords_file << "," << y;	              // camera 2D y [px]
 				coords_file << "," << joint_coords.x;	  // joint 3D x [m]
 				coords_file << "," << joint_coords.y;	  // joint 3D y [m]
 				coords_file << "," << joint_coords.z;	  // joint 3D z [m]
-				coords_file << "," << x;				  // camera 2D x [px]
-				coords_file << "," << y;	              // camera 2D y [px]
 				coords_file << "," << occluded;			  // is joint occluded?
 				coords_file << "," << occlusion_self;	  // is joint self-occluded?
 				coords_file << "," << cam_coords.x;		  // camera 3D x [m]
