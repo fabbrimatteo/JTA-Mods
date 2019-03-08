@@ -60,6 +60,8 @@ Each annotation file refers to a specific sequence. An annotation consists of a 
 | x3D           | 3D _x_ coordinate of the joint in meters                      |
 | y3D           | 3D _y_ coordinate of the joint in meters                      |
 | z3D           | 3D _z_ coordinate of the joint in meters                      |
+| x2D           | 2D _x_ coordinate of the joint in pixels                      |
+| y2D           | 2D _y_ coordinate of the joint in pixels                      |
 | occluded      | `1` if the joint is occluded; `0` otherwise                   |
 | self_occluded | `1` if the joint is occluded by its owner; `0` otherwise      |
 | cam_3D_x      | 3D _x_ coordinate of the camera in meters                     |
