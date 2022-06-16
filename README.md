@@ -3,7 +3,7 @@ This repository contains two Grand Theft Auto V Mods used for creating the [JTA 
 - ScenarioCreator: lets you create your own scenarios that should appear in your dataset
 - DatasetAnnotator: records the scenarios previously created and store the annotations
 
-## Quick start
+<!-- ## Quick start
 - Download and install a legal copy of Grand Theft Auto V
 - Download ScriptHook V AND the SDK [here](http://www.dev-c.com/gtav/scripthookv/). 
     - Follow the instructions reported on the web page. Also, follow the instructions of the SDK readme under the section "Runtime asi script reloading"
@@ -13,7 +13,7 @@ This repository contains two Grand Theft Auto V Mods used for creating the [JTA 
 - If you installed GTA V using Rockstar's Social Club, you have to change the permissions of the game folder (read, write and execute). If you used Steam, everything should be fine.
 - Run Grand Theft Auto V and select Story Mode. If it is your first start of the game, you have to complete the first mission. Enjoy!
 - The mods will automatically start. Now, by pressing F5 you can use the ScenarioCreator mod to create your own scenarios. By pressing F8 the DatasetAnnotator mod will start recording the scenarios. You can disable the Mods in any time by pressing ctrl+R.
-- Remember to disable the HUD in the display settings of GTA V. Also disable the in-game notifications.
+- Remember to disable the HUD in the display settings of GTA V. Also disable the in-game notifications. -->
 
 
 ## Developer Guide
